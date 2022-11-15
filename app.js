@@ -27,6 +27,7 @@ try {
     console.log(`No se pudo conectar a la DB : ${error}`)
 }
 
+console.log(PORT)
 
 app.get('/', (req, res) => {
    // res.send('Server Node OnLine !!')
