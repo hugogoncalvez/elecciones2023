@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors';
 import path from "path";
 import { fileURLToPath } from "url";
-import { PORT } from "./config.js";
+import { PORT , DB_PORT } from "./config.js";
 
 //importar la base de datos
 import db from './database/db.js';
@@ -26,8 +26,11 @@ try {
 } catch (error) {
     console.log(`No se pudo conectar a la DB : ${error}`)
 }
-
+consolelog('puerto app')
 console.log(PORT)
+
+consolelog('puerto DB')
+console.log(DB_PORT)
 
 app.get('/', (req, res) => {
    // res.send('Server Node OnLine !!')
