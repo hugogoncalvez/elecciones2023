@@ -61,11 +61,11 @@ export const getNota = async (req, res) => {
 
 export const createNota = async (req, res) => {
 
-   
-    try {       
+
+    try {
         await NotaModel.create(req.body)
         res.json({ "message": 'Registro creado correctamente' })
-      
+
     } catch (error) {
         res.json({ "message": error.message })
     }
@@ -124,7 +124,7 @@ export const createUsu = async (req, res) => {
 // login de usuario
 
 export const loginUsu = async (req, res) => {
-    // console.log(req.params.usuario + '   entro en login')
+    
     try {
         const login = await UsuarioModel.findAll({
             where: {
@@ -133,14 +133,14 @@ export const loginUsu = async (req, res) => {
         });
 
         if (login.length === 0) {
-            console.log('NO tiene datos')
-            res.json({ ...login, "msgError": "No existe el usuario, debe darse de alta" })
+            let respuesta = ({...login, error: "No existe el usuario, debe darse de alta", pass: "sin Pass" });
+            res.json(respuesta);
         } else {
             console.log('tiene datos')
-            console.log(login)
-            res.json({ ...login, "msgError": "" })
+            console.log(login[0].dataValues)
+            res.json(login[0].dataValues)
         }
-        //   console.log(res.json(login.msgError) + '   al final')
+
 
     } catch (error) {
 
