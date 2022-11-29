@@ -1,8 +1,10 @@
 // importar el Modelo
 import UsuarioModel from "../Models/UsuarioModel.js"
-import NotaModel from "../Models/NotaModel.js"
+import NotaModel from "../Models/EscuelaModel.js"
+import EscuelaModel  from "../Models/EscuelaModel.js";
 import db from "../database/db.js";
 import { QueryTypes } from "sequelize";
+import MesasModel from "../Models/MesasModel.js";
 
 
 
@@ -28,14 +30,30 @@ import { QueryTypes } from "sequelize";
 //         console.log(e)
 //     }
 // }
-export const getNotas = async (req, res) => {
+export const getEscuelas = async (req, res) => {
     try {
-        const notas = await NotaModel.findAll({
+        const escuelas = await EscuelaModel.findAll({
             order: [
-                ["createdAt", "DESC"]
+                ["numero", "ASC"]
             ]
         })
-        res.json(notas)
+        res.json(escuelas)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+export const getMesas = async (req, res) => {
+    try {
+        const mesas = await MesasModel.findAll({
+            where: {
+                cargada: '0'
+            },
+            order: [
+                ["num_mesa", "ASC"]
+            ]
+        })
+        res.json(mesas)
     } catch (error) {
         res.json({ message: error.message })
     }
