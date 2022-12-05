@@ -5,6 +5,7 @@ import EscuelaModel  from "../Models/EscuelaModel.js";
 import db from "../database/db.js";
 import { QueryTypes } from "sequelize";
 import MesasModel from "../Models/MesasModel.js";
+import LemasModel from "../Models/LemasModel.js";
 
 
 
@@ -58,7 +59,19 @@ export const getMesas = async (req, res) => {
         res.json({ message: error.message })
     }
 }
-
+export const getLemas = async (req, res) => {
+    try {
+        const lemas = await LemasModel.findAll({
+            
+            order: [
+                ["numero", "ASC"]
+            ]
+        })
+        res.json(lemas)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
 // mostrar un cliente
 
 export const getNota = async (req, res) => {
