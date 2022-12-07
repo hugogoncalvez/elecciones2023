@@ -1,11 +1,14 @@
 // importar el Modelo
 import UsuarioModel from "../Models/UsuarioModel.js"
 import NotaModel from "../Models/EscuelaModel.js"
-import EscuelaModel  from "../Models/EscuelaModel.js";
+import EscuelaModel from "../Models/EscuelaModel.js";
 import db from "../database/db.js";
 import { QueryTypes } from "sequelize";
 import MesasModel from "../Models/MesasModel.js";
 import LemasModel from "../Models/LemasModel.js";
+import GobModel from "../Models/GobModel.js";
+import IntModel from "../Models/IntModel.js";
+import AgrupacionesModel from "../Models/AgrupacionesModel.js";
 
 
 
@@ -62,7 +65,7 @@ export const getMesas = async (req, res) => {
 export const getLemas = async (req, res) => {
     try {
         const lemas = await LemasModel.findAll({
-            
+
             order: [
                 ["numero", "ASC"]
             ]
@@ -72,29 +75,24 @@ export const getLemas = async (req, res) => {
         res.json({ message: error.message })
     }
 }
-// mostrar un cliente
-
-export const getNota = async (req, res) => {
-    // console.log('entro en getblog')
+export const getAgrupaciones = async (req, res) => {
     try {
-        const nota = await NotaModel.findAll({
-            where: {
-                id: req.params.id
-            }
+        const agrupaciones = await AgrupacionesModel.findAll({
+
+            order: [
+                ["letra", "ASC"]
+            ]
         })
-        res.json(nota[0])
+        res.json(agrupaciones)
     } catch (error) {
         res.json({ message: error.message })
     }
 }
 
-// crear una nota
-
-export const createNota = async (req, res) => {
-
+export const createGob = async (req, res) => {
 
     try {
-        await NotaModel.create(req.body)
+        await GobModel.create(req.body)
         res.json({ "message": 'Registro creado correctamente' })
 
     } catch (error) {
@@ -102,31 +100,71 @@ export const createNota = async (req, res) => {
     }
 }
 
-// actualizar un cliente
+export const createInt = async (req, res) => {
 
-export const updateNota = async (req, res) => {
     try {
-        await NotaModel.update(req.body, {
-            where: { id: req.params.id }
-        })
-        res.json({ "message": 'Registro actualizado correctamente' })
+        await IntModel.create(req.body)
+        res.json({ "message": 'Registro creado correctamente' })
+
     } catch (error) {
-        res.json({ message: error.message })
+        res.json({ "message": error.message })
     }
 }
+// // mostrar un cliente
 
-// eliminar un cliente
+// export const getNota = async (req, res) => {
+//     // console.log('entro en getblog')
+//     try {
+//         const nota = await NotaModel.findAll({
+//             where: {
+//                 id: req.params.id
+//             }
+//         })
+//         res.json(nota[0])
+//     } catch (error) {
+//         res.json({ message: error.message })
+//     }
+// }
 
-export const deleteNota = async (req, res) => {
-    try {
-        await NotaModel.destroy({
-            where: { id: req.params.id }
-        })
-        res.json({ message: 'Registro eliminado correctamente' })
-    } catch (error) {
-        res.json({ message: error.message })
-    }
-}
+// // crear una nota
+
+// export const createNota = async (req, res) => {
+
+
+//     try {
+//         await NotaModel.create(req.body)
+//         res.json({ "message": 'Registro creado correctamente' })
+
+//     } catch (error) {
+//         res.json({ "message": error.message })
+//     }
+// }
+
+// // actualizar un cliente
+
+// export const updateNota = async (req, res) => {
+//     try {
+//         await NotaModel.update(req.body, {
+//             where: { id: req.params.id }
+//         })
+//         res.json({ "message": 'Registro actualizado correctamente' })
+//     } catch (error) {
+//         res.json({ message: error.message })
+//     }
+// }
+
+// // eliminar un cliente
+
+// export const deleteNota = async (req, res) => {
+//     try {
+//         await NotaModel.destroy({
+//             where: { id: req.params.id }
+//         })
+//         res.json({ message: 'Registro eliminado correctamente' })
+//     } catch (error) {
+//         res.json({ message: error.message })
+//     }
+// }
 
 //  USUARIO
 // crear usuario
@@ -155,7 +193,7 @@ export const createUsu = async (req, res) => {
 // login de usuario
 
 export const loginUsu = async (req, res) => {
-    
+
     try {
         const login = await UsuarioModel.findAll({
             where: {
@@ -164,7 +202,7 @@ export const loginUsu = async (req, res) => {
         });
 
         if (login.length === 0) {
-            let respuesta = ({...login, error: "No existe el usuario, debe darse de alta", pass: "sin Pass" });
+            let respuesta = ({ ...login, error: "No existe el usuario, debe darse de alta", pass: "sin Pass" });
             res.json(respuesta);
         } else {
             console.log('tiene datos')
