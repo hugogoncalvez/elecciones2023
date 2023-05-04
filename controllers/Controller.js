@@ -9,6 +9,9 @@ import LemasModel from "../Models/LemasModel.js";
 import GobModel from "../Models/GobModel.js";
 import IntModel from "../Models/IntModel.js";
 import AgrupacionesModel from "../Models/AgrupacionesModel.js";
+import OtrosVotosModel from "../Models/OtrosVotosModel.js";
+import OVRModel from "../Models/OtrosVotosResultModel.js";
+import CertificadoModel from "../Models/CertificadoModel.js";
 
 
 
@@ -46,6 +49,18 @@ export const getEscuelas = async (req, res) => {
         res.json({ message: error.message })
     }
 }
+export const getOtros = async (req, res) => {
+    try {
+        const otrosVotos = await OtrosVotosModel.findAll({
+            order: [
+                ["id", "ASC"]
+            ]
+        })
+        res.json(otrosVotos)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
 
 export const getMesas = async (req, res) => {
     try {
@@ -62,12 +77,41 @@ export const getMesas = async (req, res) => {
         res.json({ message: error.message })
     }
 }
+export const getMesasCargadas = async (req, res) => {
+    try {
+        const mesas = await MesasModel.findAll({
+            where: {
+                cargada: '1'
+            },
+            order: [
+                ["num_mesa", "ASC"]
+            ]
+        })
+        res.json(mesas)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+export const getCertificado = async (req, res) => {
+    console.log('Entra en geTCertificado')
+    try {
+        const certificado = await CertificadoModel.findAll({
+            order: [
+                ["id", "ASC"]
+            ]
+        })
+        res.json(certificado)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
 export const getLemas = async (req, res) => {
     try {
         const lemas = await LemasModel.findAll({
 
             order: [
-                ["numero", "ASC"]
+                ["id", "ASC"]
             ]
         })
         res.json(lemas)
@@ -89,14 +133,122 @@ export const getAgrupaciones = async (req, res) => {
     }
 }
 
-export const createGob = async (req, res) => {
+export const getGobResult = async (req, res) => {
+    try {
+        const mesas = await GobModel.findAll({
+            where: {
+                mesa: req.params.mesa
+            },
+            order: [
+                ["id", "ASC"]
+            ]
+        })
+        res.json(mesas)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
 
+export const getIntResult = async (req, res) => {
+    try {
+        const mesas = await IntModel.findAll({
+            where: {
+                mesa: req.params.mesa
+            },
+            order: [
+                ["id", "ASC"]
+            ]
+        })
+        res.json(mesas)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+export const getOtrosResult = async (req, res) => {
+    try {
+        const mesas = await OVRModel.findAll({
+            where: {
+                mesa: req.params.mesa
+            },
+            order: [
+                ["id", "ASC"]
+            ]
+        })
+        res.json(mesas)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+export const getTotalGobDip = async (req, res) => {
+    try {
+        const totales = await db.query('SELECT DISTINCT `gobernadores`.`num_partido`, `lemas`.`lema`, SUM(`gobernadores`.`gobernador`) AS gobernador, SUM(`gobernadores`.`diputado`) AS diputado FROM `gobernadores` INNER JOIN `lemas` ON `lemas`.`numero` = `gobernadores`.`num_partido` GROUP BY `num_partido`;',
+         {
+            model: GobModel,
+            mapToModel: false // pass true here if you have any mapped fields
+        });
+        res.json(totales)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+export const getTotalIntConConv = async (req, res) => {
+    try {
+        const totales = await db.query('SELECT DISTINCT `agrupaciones`.`lema`, `agrupaciones`.`letra`, `agrupaciones`.`sublema_cand`, `agrupaciones`.`candidato`, SUM(`intendentes`.`intendente`) AS intendente, SUM(`intendentes`.`concejal`) AS concejal, SUM(`intendentes`.`convencional`) AS convencional FROM `intendentes` INNER JOIN `agrupaciones` ON `agrupaciones`.`letra` = `intendentes`.`letra` GROUP BY `letra`;',
+         {
+            model: GobModel,
+            mapToModel: false // pass true here if you have any mapped fields
+        });
+        res.json(totales)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+export const getTotalOtrosVotos = async (req, res) => {
+    try {
+        const totales = await db.query('SELECT DISTINCT `tipoVoto` AS tipo,SUM(`gobernador`) AS gobernador,SUM(`diputado`) AS diputado,SUM(`intendente`) AS intendente,SUM(`concejal`) AS concejal,SUM(`convencional`) AS convencional FROM `otrosvotosres` GROUP BY `tipoVoto`;',
+         {
+            model: GobModel,
+            mapToModel: false // pass true here if you have any mapped fields
+        });
+        res.json(totales)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+export const createGob = async (req, res) => {
     try {
         await GobModel.create(req.body)
         res.json({ "message": 'Registro creado correctamente' })
-
     } catch (error) {
         res.json({ "message": error.message })
+    }
+}
+
+export const getTotalMesas = async (req, res) => {
+    try {
+        const totales = await db.query('SELECT COUNT(*) AS mesas FROM `mesas`;',
+         {
+            model: MesasModel,
+            mapToModel: false // pass true here if you have any mapped fields
+        });
+        res.json(totales)
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+}
+
+export const getTotalMesasCargadas = async (req, res) => {
+    try {
+        const totales = await db.query('SELECT COUNT(*) AS cargadas FROM `mesas` WHERE `cargada` = 1;',
+         {
+            model: MesasModel,
+            mapToModel: false // pass true here if you have any mapped fields
+        });
+        res.json(totales)
+    } catch (error) {
+        res.json({ message: error.message })
     }
 }
 
@@ -110,61 +262,78 @@ export const createInt = async (req, res) => {
         res.json({ "message": error.message })
     }
 }
-// // mostrar un cliente
+export const createOtrosVotos = async (req, res) => {
 
-// export const getNota = async (req, res) => {
-//     // console.log('entro en getblog')
-//     try {
-//         const nota = await NotaModel.findAll({
-//             where: {
-//                 id: req.params.id
-//             }
-//         })
-//         res.json(nota[0])
-//     } catch (error) {
-//         res.json({ message: error.message })
-//     }
-// }
+    try {
+        await OVRModel.create(req.body)
+        res.json({ "message": 'Registro creado correctamente' })
 
-// // crear una nota
-
-// export const createNota = async (req, res) => {
+    } catch (error) {
+        res.json({ "message": error.message })
+    }
+}
+export const updateGob = async (req, res) => {
 
 
-//     try {
-//         await NotaModel.create(req.body)
-//         res.json({ "message": 'Registro creado correctamente' })
+    try {
+        await GobModel.update(
+            req.body,
+            {
+                where: { mesa: req.params.num, num_partido: req.body.num_partido }
+            })
+        res.json({ "message": 'Registro creado correctamente' })
+    } catch (error) {
+        res.json({ "message": error.message })
+    }
+}
 
-//     } catch (error) {
-//         res.json({ "message": error.message })
-//     }
-// }
+export const updateInt = async (req, res) => {
 
-// // actualizar un cliente
+    try {
+        await IntModel.update(
+            req.body,
+            {
+                where: { mesa: req.params.num, letra: req.body.letra }
+            })
+        res.json({ "message": 'Registro creado correctamente' })
 
-// export const updateNota = async (req, res) => {
-//     try {
-//         await NotaModel.update(req.body, {
-//             where: { id: req.params.id }
-//         })
-//         res.json({ "message": 'Registro actualizado correctamente' })
-//     } catch (error) {
-//         res.json({ message: error.message })
-//     }
-// }
+    } catch (error) {
+        res.json({ "message": error.message })
+    }
+}
+export const updateOtrosVotos = async (req, res) => {
+    console.log(req.body)
+    try {
+        await OVRModel.update(
+            req.body,
+            {
+                where: { mesa: req.params.num, tipoVoto: req.body.tipoVoto }
+            })
+        res.json({ "message": 'Registro creado correctamente' })
 
-// // eliminar un cliente
+    } catch (error) {
+        res.json({ "message": error.message })
+    }
+}
 
-// export const deleteNota = async (req, res) => {
-//     try {
-//         await NotaModel.destroy({
-//             where: { id: req.params.id }
-//         })
-//         res.json({ message: 'Registro eliminado correctamente' })
-//     } catch (error) {
-//         res.json({ message: error.message })
-//     }
-// }
+
+
+
+export const updateMesa = async (req, res) => {
+
+    try {
+        await MesasModel.update(
+            {
+                cargada: '1'
+            },
+            {
+                where: { num_mesa: req.params.num }
+            })
+    } catch (error) {
+        res.json({ "message": error.message })
+    }
+}
+
 
 //  USUARIO
 // crear usuario

@@ -4,7 +4,8 @@ import { DataTypes } from "sequelize";
 
 const AgrupacionesModel = db.define('agrupaciones', {
     letra: { type: DataTypes.STRING },
-    sublema_cand: { type: DataTypes.STRING }    
+    sublema_cand: { type: DataTypes.STRING },
+    candidato: { type: DataTypes.STRING }
 })
 
 

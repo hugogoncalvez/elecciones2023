@@ -32,10 +32,10 @@ console.log(PORT)
 console.log('puerto DB')
 console.log(DB_PORT)
 
-app.get('/', (req, res) => {
-   // res.send('Server Node OnLine !!')
-   res.sendFile(path.join(__dirname, 'build', 'index.html'))
-});
+app.get('*', (req, res) => {
+    // res.send('Server Node OnLine !!')
+    res.sendFile(path.join(__dirname, 'dist', 'index.html')) // poner el nombre de la carpeta donde se ubica la build
+ });
 
 
 app.listen(PORT, () => {

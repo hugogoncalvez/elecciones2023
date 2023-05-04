@@ -8,7 +8,8 @@ const IntModel = db.define('intendentes', {
     letra: { type: DataTypes.STRING },    
     intendente: { type: DataTypes.INTEGER },    
     concejal: { type: DataTypes.INTEGER },    
-    usuario: { type: DataTypes.STRING },    
+    convencional: { type: DataTypes.INTEGER },
+    usuario: { type: DataTypes.STRING }    
 })
 
 

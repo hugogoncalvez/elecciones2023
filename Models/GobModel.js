@@ -7,7 +7,7 @@ const GobModel = db.define('gobernadores', {
     mesa: { type: DataTypes.STRING },    
     num_partido: { type: DataTypes.STRING },    
     gobernador: { type: DataTypes.INTEGER },    
-    diputado: { type: DataTypes.INTEGER },    
+    diputado: { type: DataTypes.INTEGER },   
     usuario: { type: DataTypes.STRING },    
 })
 

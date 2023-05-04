@@ -9,7 +9,8 @@ import { DataTypes } from "sequelize";
 
 const UsuarioModel = db.define('usuarios',{
     usuario:{type: DataTypes.STRING},
-    pass:{type: DataTypes.STRING}
+    pass:{type: DataTypes.STRING},
+    tipo:{type: DataTypes.INTEGER},
 })
 
 export default UsuarioModel;
