@@ -2,7 +2,7 @@ import db from "../database/db.js";
 
 import { DataTypes } from "sequelize";
 
-const OtrosVotosModel = db.define('otrosVotos', {
+const OtrosVotosModel = db.define('otrosvotos', {
     tipoVoto: { type: DataTypes.STRING },
     gobernador: { type: DataTypes.STRING },    
     diputados: { type: DataTypes.STRING },    
